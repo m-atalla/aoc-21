@@ -11,7 +11,7 @@ main = do
         input = lines file
         draw = parseDraw $ head input
         boardSrc = delete "" (tail input)
-        boards = parseBoards boardSrc []
+        boards = parseBoards boardSrc
 
     putStrLn "Part 1:"
     print $ solve $ bingo draw boards
@@ -19,11 +19,12 @@ main = do
     print $ solve $ bingoLast draw boards
     return ()
 
-parseBoards :: [String] -> [Board] -> [Board]
-parseBoards [] acc = acc
-parseBoards src acc = parsedBoard : parseBoards nextInput acc
+parseBoards :: [String] -> [Board]
+parseBoards src = parseBoardsInternal src []
     where
-        parsedBoard = toBoard $ takeWhile (/= "") src
+        parseBoardsInternal [] acc = acc 
+        parseBoardsInternal src acc = parsedBoard : parseBoardsInternal nextInput acc
+        parsedBoard = toBoard $ takeWhile (/= "") src 
         nextInput = safeTail $ dropWhile (/= "") src
 
 safeTail :: [a] -> [a]
