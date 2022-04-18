@@ -64,12 +64,10 @@ safeInsert :: Int -> Int -> Pop -> Pop
 safeInsert = Map.insertWith (+)
 
 nextGen' :: Pop -> Pop
-nextGen' currentPop = nextGenPatch
+nextGen' currentPop = next
     where
-        (next, _) = Map.mapAccumWithKey (\acc k v -> (safeInsert (step k) v acc, v)) (Map.fromList [(0, 0)]) currentPop
-        -- Using this method will always drop the last key, thus 
-        -- it needs to be patched back in the next generation map
-        nextGenPatch = safeInsert 8 0 next
+        accum = Map.fromList [(0, 0)]
+        (next, _) = Map.mapAccumWithKey (\acc k v -> (safeInsert (step k) v acc, v)) accum currentPop
 
 lanternFishSim :: Pop -> Pop 
 lanternFishSim pop = nextDay
